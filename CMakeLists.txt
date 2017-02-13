@@ -29,4 +29,7 @@ add_executable(uti
     test/test.cpp
     test/array_test.cpp
     )
+set_target_properties(uti PROPERTIES
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED ON)
 target_link_libraries(uti gtest)
