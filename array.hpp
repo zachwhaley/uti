@@ -12,62 +12,104 @@ template<class T>
 class Array
 {
 private:
-    size_t len = 0;
-    size_t size = 10;
-    T* data = new T[size];
+    size_t size_ = 0;
+    T* data_ = nullptr;
 
 public:
     Array()
     {
     }
-    Array(size_t l)
-        : len(l)
-        , size(l)
-        , data(new T[l])
+    Array(size_t sz)
+        : size_(sz)
+        , data_(new T[sz])
     {
     }
-    Array(const Array& other) : Array(other.size)
+    Array(const Array& other) : Array(other.size_)
     {
-        std::copy(other.data, other.data + other.size, data);
+        std::copy(other.data_, other.data_ + other.size_, data_);
     }
     Array(Array&& other) noexcept
-        : len(other.len)
-        , size(other.size)
-        , data(other.data)
+        : size_(other.size_)
+        , data_(other.data_)
     {
-        other.len = 0;
-        other.size = 0;
-        other.data = nullptr;
+        other.size_ = 0;
+        other.data_ = nullptr;
     }
     Array(std::initializer_list<T> il) : Array(il.size())
     {
-        std::copy(il.begin(), il.end(), data);
+        std::copy(il.begin(), il.end(), data_);
     }
     Array& operator=(Array other)
     {
-        std::swap(len, other.len);
-        std::swap(size, other.size);
-        std::swap(data, other.data);
+        std::swap(size_, other.size_);
+        std::swap(data_, other.data_);
         return *this;
     }
     ~Array() noexcept
     {
-        delete[] data;
+        delete[] data_;
     }
 
     T& operator[](size_t i)
     {
-        if (i >= len)
+        if (i >= size_)
             throw std::out_of_range("index out of range.");
-        return data[i];
+        return data_[i];
     }
-    size_t Size() const
+    size_t size() const
     {
-        return size;
+        return size_;
     }
-    size_t Length() const
+
+    class iterator
     {
-        return len;
+        T* elem = nullptr;
+    public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+        using pointer = T*;
+        using reference = T&;
+
+        iterator(pointer e)
+            : elem(e)
+        {
+        }
+        iterator& operator++()
+        {
+            elem++;
+            return *this;
+        }
+        iterator operator++(int)
+        {
+            iterator rval = *this;
+            ++(*this);
+            return rval;
+        }
+        bool operator==(iterator other) const
+        {
+            return elem == other.elem;
+        }
+        bool operator!=(iterator other) const
+        {
+            return !(*this == other);
+        }
+        reference operator*() const
+        {
+            return *elem;
+        }
+        reference operator->() const
+        {
+            return *elem;
+        }
+    };
+    iterator begin()
+    {
+        return iterator(data_);
+    }
+    iterator end()
+    {
+        return iterator(data_ + size_);
     }
 };
 
