@@ -14,11 +14,10 @@ class Array
 private:
     size_t len = 0;
     size_t size = 10;
-    T* data = nullptr;
+    T* data = new T[size];
 
 public:
     Array()
-        : data(new T[size])
     {
     }
     Array(size_t l)
