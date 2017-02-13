@@ -90,3 +90,20 @@ TEST(ArrayTest, Ranges)
         v++;
     }
 }
+
+TEST(ArrayTest, PushBack)
+{
+    uti::Array<int> ar;
+    EXPECT_EQ(0, ar.size());
+
+    ar.push_back(1);
+    ar.push_back(2);
+    ar.push_back(3);
+    EXPECT_EQ(3, ar.size());
+
+    int v = 1;
+    for (auto i : ar) {
+        EXPECT_EQ(v, i);
+        v++;
+    }
+}

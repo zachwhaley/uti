@@ -13,7 +13,8 @@ class Array
 {
 private:
     size_t size_ = 0;
-    T* data_ = nullptr;
+    size_t capacity_ = 10;
+    T* data_ = new T[capacity_];
 
 public:
     Array()
@@ -21,7 +22,8 @@ public:
     }
     Array(size_t sz)
         : size_(sz)
-        , data_(new T[sz])
+        , capacity_(size_ * 2)
+        , data_(new T[capacity_])
     {
     }
     Array(const Array& other) : Array(other.size_)
@@ -59,6 +61,17 @@ public:
     size_t size() const
     {
         return size_;
+    }
+    size_t capacity() const
+    {
+        return capacity_;
+    }
+    void push_back(const T& val)
+    {
+        if (size_ == capacity_)
+            return;
+        data_[size_] = val;
+        ++size_;
     }
 
     class iterator
